@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: system-ui, sans-serif; width: 400px; padding: 0; background: #0f1117; color: #fff; margin: 0; }
+    .header { background: #111218; padding: 16px; border-bottom: 1px solid #1f2937; display: flex; align-items: center; gap: 10px; }
+    .header-icon { width: 28px; height: 28px; background: #6366f1; border-radius: 6px; padding: 4px; box-sizing: border-box; }
+    h2 { margin: 0; font-size: 16px; font-weight: 600; color: #fff; }
+    .content { padding: 16px; max-height: 420px; overflow-y: auto; }
+    .form-group { margin-bottom: 12px; }
+    label { display: block; font-size: 12px; color: #9ca3af; margin-bottom: 4px; font-weight: 500; }
+    select, input, textarea { width: 100%; box-sizing: border-box; background: #1e212b; border: 1px solid #374151; color: #fff; padding: 8px; border-radius: 6px; font-size: 13px; outline: none; transition: border-color 0.2s; }
+    select:focus, input:focus, textarea:focus { border-color: #6366f1; }
+    textarea { height: 120px; font-family: monospace; resize: vertical; }
+    .checkbox-lbl { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #d1d5db; cursor: pointer; margin-top: 6px; }
+    .checkbox-lbl input { width: auto; accent-color: #6366f1; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .start-btn { width: 100%; padding: 12px; background: #6366f1; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.2s; }
+    .start-btn:hover { background: #4f46e5; }
+    .status { margin-top: 12px; font-size: 12px; color: #9ca3af; text-align: center; }
+    .heading-sm { font-size: 14px; font-weight: 600; color: #818cf8; margin: 20px 0 10px 0; border-bottom: 1px solid #1f2937; padding-bottom: 6px; }
+    .footer { padding: 16px; background: #111218; border-top: 1px solid #1f2937; position: sticky; bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+    <h2>Flow Automator</h2>
+  </div>
+  <div class="content">
+    <div class="form-group">
+      <label>Generation Mode</label>
+      <select id="generationMode">
+        <option value="textToVideo">Text → Video</option>
+        <option value="imageToVideo">Image → Video</option>
+        <option value="componentsToVideo">Components → Video</option>
+        <option value="textToImage">Text → Image</option>
+        <option value="imageToImage">Image → Image</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label>AI Model</label>
+      <select id="aiModel">
+        <optgroup label="Veo 3.1">
+          <option value="veo-3.1-quality">Quality</option>
+          <option value="veo-3.1-fast">Fast</option>
+          <option value="veo-3.1-lite">Lite</option>
+          <option value="veo-3.1-omni">Omni Flash</option>
+        </optgroup>
+        <optgroup label="Nano Banana">
+          <option value="nano-banana-2">🍌 Nano Banana 2</option>
+          <option value="nano-banana-pro">🍌 Nano Banana Pro</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Aspect Ratio</label>
+      <select id="aspectRatio">
+        <option value="16:9">16:9 (Landscape)</option>
+        <option value="9:16">9:16 (Portrait)</option>
+        <option value="1:1">1:1 (Square)</option>
+        <option value="4:3">4:3</option>
+        <option value="3:4">3:4</option>
+      </select>
+    </div>
+
+    <div class="heading-sm">Prompts Setup</div>
+    <div class="form-group">
+      <label>Batch Queue (Separate layers with ===)</label>
+      <textarea id="batchQueue" placeholder="A futuristic car... 
+===
+A dog flying... @dog_img"></textarea>
+    </div>
+
+    <div class="grid">
+      <div class="form-group">
+        <label>Delay Min (s)</label>
+        <input type="number" id="promptDelayMin" min="0" step="0.5" value="2">
+      </div>
+      <div class="form-group">
+        <label>Delay Max (s)</label>
+        <input type="number" id="promptDelayMax" min="0" step="0.5" value="5">
+      </div>
+    </div>
+    
+    <div class="grid">
+      <div class="form-group">
+        <label>Max Retries</label>
+        <input type="number" id="maxRetries" min="0" value="3">
+      </div>
+      <div class="form-group">
+        <label>Concurrent Prompts</label>
+        <input type="number" id="concurrentPrompts" min="1" value="1">
+      </div>
+    </div>
+
+    <div class="heading-sm">Features & Output</div>
+    
+    <label class="checkbox-lbl">
+      <input type="checkbox" id="autoMatchCharacter" checked>
+      Auto-match images via @tags
+    </label>
+    
+    <label class="checkbox-lbl">
+      <input type="checkbox" id="concatMode">
+      Concat Mode (Connect scenes)
+    </label>
+
+    <div class="grid" style="margin-top:12px;">
+      <div class="form-group">
+        <label>Auto Download</label>
+        <select id="autoDownloadQuality">
+          <option value="1080">1080p</option>
+          <option value="2k">2K</option>
+          <option value="4k">4K</option>
+          <option value="none">None</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Folder Name Base</label>
+        <input type="text" id="folderNamingRule" value="YYYY-MM-DD_Batch">
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <button class="start-btn" id="startBtn">Start Automation</button>
+    <div class="status" id="statusMsg">Ready to launch on labs.google</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
